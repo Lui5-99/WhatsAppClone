@@ -30,4 +30,4 @@ api.get(
   ChatMessageController.getLatestMessage
 );
 
-export const chatMessage = api;
+export const chatMessageRoutes = api;

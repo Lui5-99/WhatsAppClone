@@ -8,8 +8,9 @@ import {
   authRoutes,
   userRoutes,
   chatRoutes,
-  chatMessage,
+  chatMessageRoutes,
 } from "./routes/index.js";
+import { groupRoutes } from "./routes/group.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -36,6 +37,7 @@ app.use(morgan("dev"));
 app.use("/api", authRoutes);
 app.use("/api", userRoutes);
 app.use("/api", chatRoutes);
-app.use("/api", chatMessage);
+app.use("/api", chatMessageRoutes);
+app.use("/api", groupRoutes);
 
 export { server };
