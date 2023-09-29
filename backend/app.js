@@ -4,7 +4,7 @@ import cors from "cors";
 import http from "http";
 import morgan from "morgan";
 import { initSocketServer } from "./utils/index.js";
-import { authRoutes } from "./routes/index.js";
+import { authRoutes, userRoutes } from "./routes/index.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -29,5 +29,6 @@ app.use(morgan("dev"));
 
 // Routing
 app.use("/api", authRoutes);
+app.use("/api", userRoutes);
 
 export { server };
