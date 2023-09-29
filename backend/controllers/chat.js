@@ -1,4 +1,4 @@
-import { Chat } from "../models/index.js";
+import { Chat, ChatMessage } from "../models/index.js";
 
 const createChat = async (req, res) => {
   try {
@@ -37,7 +37,17 @@ const getAllChats = async (req, res) => {
     })
       .populate("participant_one")
       .populate("participant_two");
-    return res.status(200).send(chats);
+    const arrayChats = [];
+    for await (const chat of chats) {
+      const response = await ChatMessage.findOne({ chat: chat._id }).sort({
+        createdAt: -1,
+      });
+      arrayChats.push({
+        ...chat._doc,
+        last_message_date: response?.createdAt || null,
+      });
+    }
+    return res.status(200).send(arrayChats);
   } catch (error) {
     return res.status(500).send({ msg: error.message });
   }

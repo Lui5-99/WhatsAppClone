@@ -1,1 +1,1 @@
-# WhatsAppClone
+# WhatsAppClone MERN Stack

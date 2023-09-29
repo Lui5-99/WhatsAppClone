@@ -4,7 +4,12 @@ import cors from "cors";
 import http from "http";
 import morgan from "morgan";
 import { initSocketServer } from "./utils/index.js";
-import { authRoutes, userRoutes, chatRoutes } from "./routes/index.js";
+import {
+  authRoutes,
+  userRoutes,
+  chatRoutes,
+  chatMessage,
+} from "./routes/index.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -31,5 +36,6 @@ app.use(morgan("dev"));
 app.use("/api", authRoutes);
 app.use("/api", userRoutes);
 app.use("/api", chatRoutes);
+app.use("/api", chatMessage);
 
 export { server };
