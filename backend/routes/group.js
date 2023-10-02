@@ -18,7 +18,7 @@ api.patch(
 );
 api.patch("/group/exit/:id", mdAuth.asureAuth, GroupController.exitGroup);
 api.patch(
-  "/group/add_participant",
+  "/group/add_participants/:id",
   mdAuth.asureAuth,
   GroupController.addParticipant
 );

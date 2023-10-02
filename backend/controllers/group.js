@@ -1,4 +1,4 @@
-import { Group, User } from "../models/index.js";
+import { Group, GroupMessage, User } from "../models/index.js";
 import { getFilePath } from "../utils/index.js";
 
 const create = async (req, res) => {
@@ -25,11 +25,22 @@ const getAll = async (req, res) => {
     const groups = await Group.find({ participants: user_id })
       .populate("creator")
       .populate("participants");
-    return res.status(200).send(groups);
+    const arrayGroups = [];
+    for await (const group of groups) {
+      const response = await GroupMessage.findOne({ group: group._id }).sort({
+        createdAt: -1,
+      });
+      arrayGroups.push({
+        ...group._doc,
+        last_message_date: response?.createdAt || null,
+      });
+    }
+    return res.status(200).send(arrayGroups);
   } catch (error) {
     return res.status(500).send({ msg: error.message });
   }
 };
+
 const getGroup = async (req, res) => {
   try {
     const { id } = req.params;
@@ -83,16 +94,16 @@ const exitGroup = async (req, res) => {
 const addParticipant = async (req, res) => {
   try {
     const { id } = req.params;
-    const { user_id } = req.body;
+    const { users_id } = req.body;
     const group = await Group.findById(id);
 
-    const users = await User.find({ _id: user_id });
+    const users = await User.find({ _id: users_id });
 
     if (!users) return res.status(404).send({ msg: "Usuarios no encontrados" });
 
     const arrayUsers = [];
     users.forEach((user) => {
-      arrayUsers.push(user._id);
+      arrayUsers.push(user._id.toString());
     });
 
     const newData = {
