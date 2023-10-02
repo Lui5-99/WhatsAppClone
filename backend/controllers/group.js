@@ -1,4 +1,4 @@
-import { Group } from "../models/index.js";
+import { Group, User } from "../models/index.js";
 import { getFilePath } from "../utils/index.js";
 
 const create = async (req, res) => {
@@ -41,4 +41,95 @@ const getGroup = async (req, res) => {
   }
 };
 
-export const GroupController = { create, getAll, getGroup };
+const updateGroup = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name } = req.body;
+    const group = await Group.findById(id);
+    if (name) group.name = name;
+    if (req.files.image) {
+      const imagePath = getFilePath(req.files.image);
+      group.image = imagePath;
+    }
+
+    const response = await Group.findByIdAndUpdate(id, group);
+
+    return res.status(200).send({ image: group.image, name });
+  } catch (error) {
+    return res.status(500).send({ msg: error.message });
+  }
+};
+
+const exitGroup = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { user_id } = req.user;
+    const group = await Group.findById(id);
+
+    const newParticipants = group.participants.filter(
+      (participant) => participant.id.toString() !== user_id
+    );
+    const newData = {
+      ...group._doc,
+      participants: newParticipants,
+    };
+    const response = await Group.findByIdAndUpdate(id, newData);
+    return res.status(200).send({ msg: "Salida exitosa", data: response });
+  } catch (error) {
+    return res.status(500).send({ msg: error.message });
+  }
+};
+
+const addParticipant = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { user_id } = req.body;
+    const group = await Group.findById(id);
+
+    const users = await User.find({ _id: user_id });
+
+    if (!users) return res.status(404).send({ msg: "Usuarios no encontrados" });
+
+    const arrayUsers = [];
+    users.forEach((user) => {
+      arrayUsers.push(user._id);
+    });
+
+    const newData = {
+      ...group._doc,
+      participants: [...group.participants, ...arrayUsers],
+    };
+    const response = await Group.findByIdAndUpdate(id, newData);
+    return res.status(200).send(response);
+  } catch (error) {
+    return res.status(500).send({ msg: error.message });
+  }
+};
+
+const banParticipantGroup = async (req, res) => {
+  try {
+    const { group_id, user_id } = req.body;
+    const group = await Group.findById(group_id);
+    const newParticipants = group.participants.filter(
+      (participant) => participant.id.toString() !== user_id
+    );
+    const newData = {
+      ...group._doc,
+      participants: newParticipants,
+    };
+    const response = await Group.findByIdAndUpdate(group_id, newData);
+    return res.status(200).send(response);
+  } catch (error) {
+    return res.status(500).send({ msg: error.msg });
+  }
+};
+
+export const GroupController = {
+  create,
+  getAll,
+  getGroup,
+  updateGroup,
+  exitGroup,
+  addParticipant,
+  banParticipantGroup,
+};

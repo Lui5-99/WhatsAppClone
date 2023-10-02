@@ -1,4 +1,4 @@
-import { User } from "../models/index.js";
+import { User, Group } from "../models/index.js";
 import { getFilePath } from "../utils/image.js";
 
 const getMe = async (req, res) => {
@@ -56,4 +56,27 @@ const updatedUser = async (req, res) => {
   }
 };
 
-export const UserController = { getMe, getUsers, getUser, updatedUser };
+const getUserExceptParticioantsGroup = async (req, res) => {
+  try {
+    const { group_id } = req.params;
+    const group = await Group.findById(group_id);
+    const participantsString = group.participants.toString();
+    const participants = participantsString.split(",");
+    const response = await User.find({ _id: { $nin: participants } }).select([
+      "-password",
+    ]);
+    if (!response)
+      return res.status(404).send({ msg: "Usuario no encontrado" });
+    return res.status(200).send(response);
+  } catch (error) {
+    return res.status(500).send({ msg: error.msg });
+  }
+};
+
+export const UserController = {
+  getMe,
+  getUsers,
+  getUser,
+  updatedUser,
+  getUserExceptParticioantsGroup,
+};
