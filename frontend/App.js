@@ -1,14 +1,14 @@
-import { NativeBaseProvider, Box, Button } from "native-base";
+import { StatusBar } from "expo-status-bar";
+import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { NativeBaseProvider, Box } from "native-base";
 import { NavigationContainer } from "@react-navigation/native";
-import { SafeAreaView, Text } from "react-native";
 
 export default function App() {
   return (
     <NavigationContainer>
       <NativeBaseProvider>
         <SafeAreaView>
-          <Text>Chat App</Text>
-          <Button>Click Me</Button>
+          <Box>AppChat</Box>
         </SafeAreaView>
       </NativeBaseProvider>
     </NavigationContainer>
