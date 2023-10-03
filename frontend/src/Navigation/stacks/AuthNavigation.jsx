@@ -1,13 +1,16 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { AuthStart, Login, Register } from "../../screens/Auth";
-import { screens } from "../../utils";
+import { AuthStart, Login, Register } from "../../screens/Auth/index";
+import { screens } from "../../utils/index";
 import { IconBack } from "../../components/Navigation/IconBack";
+import { Text, View } from "react-native";
+import { styles } from "../Styles.styles";
 
 const Stack = createNativeStackNavigator();
 export const AuthNavigation = () => {
   return (
     <Stack.Navigator
       screenOptions={{
+        ...styles.stackNavigationStyles,
         headerLeft: IconBack,
       }}
     >
