@@ -1,5 +1,5 @@
 import { User, Group } from "../models/index.js";
-import { getFilePath } from "../utils/image.js";
+import { getFilePath, unlinkImage } from "../utils/image.js";
 
 const getMe = async (req, res) => {
   try {
@@ -44,8 +44,12 @@ const updatedUser = async (req, res) => {
     const { user_id } = req.user;
     const user = req.body;
     if (req.files.avatar) {
+      const oldAvatar = await User.findById(user_id).select(["avatar"]);
       const imgPath = getFilePath(req.files.avatar);
       user.avatar = imgPath;
+      if (user.avatar) {
+        unlinkImage(oldAvatar.avatar);
+      }
     }
     const response = await User.findByIdAndUpdate({ _id: user_id }, user);
     if (!response)
