@@ -23,7 +23,7 @@ const createChat = async (req, res) => {
       participant_two: participant_two,
     });
     const response = await chat.save();
-    return res.status(200).send(response);
+    return res.status(201).send(response);
   } catch (error) {
     return res.status(500).send({ msg: error.message });
   }

@@ -16,7 +16,7 @@ export const ChatsNavigation = () => {
       />
       <Stack.Screen
         name={screens.tabs.chats.createChat}
-        component={Chats}
+        component={CreateChat}
         options={{
           title: "Nuevo Chat",
           presentation: "modal",

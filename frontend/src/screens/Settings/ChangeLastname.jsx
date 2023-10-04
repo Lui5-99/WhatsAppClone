@@ -21,7 +21,7 @@ export const ChangeLastname = () => {
 
   const handleLastname = async (values) => {
     try {
-      const dataUser = { Lastname: values.lastname };
+      const dataUser = { lastname: values.lastname };
       await userController.updateUser(accessToken, dataUser);
       updatedUser("lastname", values.lastname);
       navigation.goBack();
