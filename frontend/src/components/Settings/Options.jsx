@@ -37,7 +37,7 @@ export const Options = ({ accessToken, logout, updatedUser }) => {
   };
 
   const goChangeLastname = () => {
-    navigation.navigate(screens.tabs.settings.changeFirstname);
+    navigation.navigate(screens.tabs.settings.changeLastname);
   };
 
   return (

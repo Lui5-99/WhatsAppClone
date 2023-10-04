@@ -42,7 +42,6 @@ export const LoginForm = () => {
             formik.errors.password && stylesFormLogin.inputError,
           ]}
           variant="unstyled"
-          autoCapitalize={false}
           value={formik.values.email}
           onChangeText={(text) => formik.setFieldValue("email", text)}
         />
