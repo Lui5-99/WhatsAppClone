@@ -1,5 +1,6 @@
+import { useEffect } from "react";
 import { View, Text } from "react-native";
-import { Input, Button } from "native-base";
+import { Input, Button, IconButton, CloseIcon } from "native-base";
 import { styles } from "./styles";
 import { initialValues, validationSchema } from "./ChangeFirstname.Form";
 import { useFormik } from "formik";
@@ -18,6 +19,18 @@ export const ChangeFirstname = () => {
     validateOnChange: false,
     onSubmit: (values) => handleFirstname(values),
   });
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <IconButton
+          icon={<CloseIcon />}
+          padding={0}
+          onPress={navigation.goBack}
+        />
+      ),
+    });
+  }, []);
 
   const handleFirstname = async (values) => {
     try {
