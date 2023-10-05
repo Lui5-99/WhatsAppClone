@@ -12,7 +12,7 @@ const send = async (req, res) => {
       type: "TEXT",
     });
     const response = await chat_message.save();
-    const result = await response.populate("user");
+    const result = await response.populate("user", "-password");
     io.sockets.in(chat_id).emit("message", result);
     io.sockets.in(`${chat_id}_notify`).emit("message_notify", result);
     return res.status(201).send(result);

@@ -7,7 +7,7 @@ import { Chat } from "../../api";
 import { useAuth } from "../../hooks";
 import { Chat as ChatComponent } from "./Chat";
 
-export const ListChats = ({ chats }) => {
+export const ListChats = ({ chats, onReload, upToChat }) => {
   return (
     <ScrollView alwaysBounceVertical={false}>
       <View style={stylesList.content}>
@@ -16,7 +16,14 @@ export const ListChats = ({ chats }) => {
             No tienes ningun chat, (+) y empieza una nueva conversación
           </Text>
         ) : (
-          map(chats, (chat) => <ChatComponent key={chat._id} chat={chat} />)
+          map(chats, (chat) => (
+            <ChatComponent
+              key={chat._id}
+              chat={chat}
+              onReload={onReload}
+              upToChat={upToChat}
+            />
+          ))
         )}
       </View>
     </ScrollView>

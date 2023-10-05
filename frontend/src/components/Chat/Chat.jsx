@@ -2,18 +2,21 @@ import { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Avatar } from "native-base";
-import { ENV, screens } from "../../utils";
+import { ENV, screens, socket } from "../../utils";
 import { size } from "lodash";
 import { stylesItem } from "./styles";
 import { useAuth } from "../../hooks";
 import { DateTime } from "luxon";
-import { ChatMessage, UnreadMessages } from "../../api";
+import { ChatMessage, UnreadMessages, Chat as ChatController } from "../../api";
 import { AlertConfirm } from "../Shared";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const chatMessageController = new ChatMessage();
+const chatController = new ChatController();
 const unreadMessagesController = new UnreadMessages();
 
-export const Chat = ({ chat }) => {
+export const Chat = ({ chat, onReload, upToChat }) => {
+  const navigation = useNavigation();
   const { accessToken, user } = useAuth();
   const { _id, participant_one, participant_two, last_message_date } = chat;
   const [lastMessage, setLastMessage] = useState(null);
@@ -50,18 +53,46 @@ export const Chat = ({ chat }) => {
   }, [_id]);
   const userChat =
     user._id === participant_one._id ? participant_two : participant_one;
-
   const openCloseDelete = () => setShowDelete((prevState) => !prevState);
   const openChat = () => {
-    console.log(`Open -> ${_id}`);
+    setTotalUnreadMessages(0);
+    navigation.navigate(screens.global.chat, { chatId: _id });
   };
-  const deleteChat = () => {
-    console.log(`Delete -> ${_id}`);
+  const deleteChat = async () => {
+    try {
+      await chatController.remove(accessToken, _id);
+      openCloseDelete();
+      onReload();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    socket.emit("subscribe", `${_id}_notify`);
+    socket.on("message_notify", newMessage);
+  }, []);
+
+  const newMessage = async (newMessage) => {
+    if (newMessage.chat === _id) {
+      if (newMessage.user._id !== user._id) {
+        upToChat(newMessage.chat);
+        setLastMessage(newMessage);
+        const active_chat_id = await AsyncStorage.getItem(ENV.ACTIVE_CHAT_ID);
+        if (active_chat_id !== newMessage.chat) {
+          setTotalUnreadMessages((prevState) => prevState + 1);
+        }
+      }
+    }
   };
 
   return (
     <>
-      <TouchableOpacity style={stylesItem.content} onPress={openChat}>
+      <TouchableOpacity
+        style={stylesItem.content}
+        onPress={openChat}
+        onLongPress={openCloseDelete}
+      >
         <Avatar
           bg="cyan.500"
           marginRight={3}
@@ -72,7 +103,7 @@ export const Chat = ({ chat }) => {
             uri: userChat.avatar && `${ENV.BASE_PATH}/${userChat.avatar}`,
           }}
         >
-          {participant_two.email.substring(0, 2).toUpperCase()}
+          {userChat.email.substring(0, 2).toUpperCase()}
         </Avatar>
         <View style={stylesItem.infoContent}>
           <View style={stylesItem.info}>
@@ -88,9 +119,9 @@ export const Chat = ({ chat }) => {
           <View style={stylesItem.notify}>
             {lastMessage?.message ? (
               <Text style={stylesItem.time}>
-                {DateTime.fromISO(
+                {new DateTime.fromISO(
                   new Date(lastMessage.createdAt).toISOString()
-                ).toFormat("HH:MM")}
+                ).toFormat("HH:mm")}
               </Text>
             ) : null}
             {totalUnreadMessages > 0 ? (
@@ -106,13 +137,14 @@ export const Chat = ({ chat }) => {
       <AlertConfirm
         show={showDelete}
         onClose={openCloseDelete}
-        textConfirm="Eliminar"
+        title="Eliminar Chat"
+        textConfirm="Si, eliminar este chat"
         onConfirm={deleteChat}
         message={`¿Estas seguro que quieres eliminar la conversación con ${
           userChat.firstname || userChat.lastname
             ? userChat.firstname || "" + userChat.lastname || ""
             : userChat.email
-        }?`}
+        }? (Esta acción tambien aplicara a la otra persona)`}
         isDanger
       />
     </>
