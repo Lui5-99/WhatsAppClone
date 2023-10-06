@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { Avatar } from "native-base";
 import { useNavigation } from "@react-navigation/native";
@@ -10,8 +11,16 @@ import { ItemText } from "./ItemText";
 import { ItemImage } from "./ItemImage";
 
 export const ListMessages = ({ messages }) => {
+  const scrollViewRef = useRef();
   return (
-    <ScrollView style={styleMessages.container} alwaysBounceVertical={false}>
+    <ScrollView
+      style={styleMessages.container}
+      alwaysBounceVertical={false}
+      ref={scrollViewRef}
+      onContentSizeChange={() => {
+        scrollViewRef.current.scrollToEnd({ animated: false });
+      }}
+    >
       <View style={styleMessages.content}>
         {map(messages, (message) => {
           if (message.type === "TEXT") {

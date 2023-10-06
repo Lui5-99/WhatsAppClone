@@ -157,12 +157,11 @@ export const styleImage = (isMe) => {
       marginBottom: 10,
     },
     message: {
-      flex: 1,
       backgroundColor: isMe ? "#0891b2" : "#202333",
       maxWidth: "80%",
       borderRadius: 10,
-      paddingVertical: 6,
-      paddingHorizontal: 10,
+      padding: 3,
+      overflow: "hidden",
     },
     textMessage: {
       color: "#fff",
@@ -173,6 +172,10 @@ export const styleImage = (isMe) => {
       fontSize: 12,
       marginTop: 2,
       textAlign: "right",
+    },
+    image: {
+      paddingRight: 3,
+      borderRadius: 10,
     },
   };
 };
