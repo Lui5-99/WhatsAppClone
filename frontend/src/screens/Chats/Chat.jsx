@@ -10,7 +10,7 @@ import { ENV } from "../../utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ListMessages } from "../../components/Chat/ListMessages";
 import { socket, io } from "../../utils";
-import { ChatForm } from "../../components/Chat";
+import { ChatForm } from "./ChatForm";
 
 const chatMessageController = new ChatMessage();
 const unReadMessagesController = new UnreadMessages();
