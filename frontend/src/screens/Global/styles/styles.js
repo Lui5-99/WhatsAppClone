@@ -18,3 +18,12 @@ export const userProfile = StyleSheet.create({
     opacity: 0.6,
   },
 });
+
+export const imageFull = StyleSheet.create({
+  content: { position: "relative" },
+  btn: {
+    position: "absolute",
+    top: 40,
+    right: 20,
+  },
+});

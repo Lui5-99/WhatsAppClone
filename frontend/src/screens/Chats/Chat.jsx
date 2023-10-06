@@ -9,6 +9,8 @@ import { LoadingScreen } from "../../components/Shared";
 import { ENV } from "../../utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ListMessages } from "../../components/Chat/ListMessages";
+import { socket, io } from "../../utils";
+import { ChatForm } from "../../components/Chat";
 
 const chatMessageController = new ChatMessage();
 const unReadMessagesController = new UnreadMessages();
@@ -57,6 +59,20 @@ export const Chat = () => {
     getMessages();
   }, [params.chatId]);
 
+  useEffect(() => {
+    socket.emit("subscribe", params.chatId);
+    socket.on("message", newMessage);
+
+    return () => {
+      socket.emit("unsubscribe", params.chatId);
+      socket.off("message", newMessage);
+    };
+  }, [params.chatId, messages]);
+
+  const newMessage = (msg) => {
+    setMessages([...messages, msg]);
+  };
+
   return (
     <>
       <HeaderChat chatId={params.chatId} />
@@ -65,6 +81,7 @@ export const Chat = () => {
       ) : (
         <View>
           <ListMessages messages={messages} />
+          <ChatForm chatId={params.chatId} />
         </View>
       )}
     </>

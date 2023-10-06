@@ -8,3 +8,4 @@ export * from "./Chat";
 export * from "./ListMessages";
 export * from "./ItemText";
 export * from "./ItemImage";
+export * from "./ChatForm";

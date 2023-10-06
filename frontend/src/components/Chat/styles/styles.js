@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform } from "react-native";
 
 export const stylesChat = StyleSheet.create({
   content: {
@@ -113,6 +113,7 @@ export const stylesItem = StyleSheet.create({
 export const styleMessages = StyleSheet.create({
   container: {
     paddingTop: 20,
+    height: Platform.OS !== "ios" && "90%",
   },
   content: {
     paddingBottom: 150,
@@ -179,3 +180,37 @@ export const styleImage = (isMe) => {
     },
   };
 };
+
+export const input = StyleSheet.create({
+  content: {
+    position: "absolute",
+    width: "100%",
+    left: 0,
+    bottom: 0,
+    paddingHorizontal: 20,
+    paddingTop: 10,
+    paddingBottom: 50,
+    backgroundColor: "#171717",
+    borderTopWidth: 1,
+    borderTopColor: "#333",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  inputContainer: {
+    flex: 1,
+    position: "relative",
+  },
+  input: {
+    backgroundColor: "#29292b",
+    color: "#fff",
+    fontSize: 16,
+    borderRadius: 50,
+    marginLeft: 15,
+  },
+  send: {
+    position: "absolute",
+    top: 0,
+    right: 10,
+    height: "100%",
+  },
+});
