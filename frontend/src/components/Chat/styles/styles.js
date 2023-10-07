@@ -113,7 +113,6 @@ export const stylesItem = StyleSheet.create({
 export const styleMessages = StyleSheet.create({
   container: {
     paddingTop: 20,
-    height: Platform.OS !== "ios" && "90%",
   },
   content: {
     paddingBottom: 150,
@@ -212,5 +211,52 @@ export const input = StyleSheet.create({
     top: 0,
     right: 10,
     height: "100%",
+  },
+});
+
+export const sendMedia = StyleSheet.create({
+  itemsContainer: {
+    backgroundColor: "transparent",
+  },
+  option: {
+    backgroundColor: "#171717",
+  },
+  cancel: {
+    borderRadius: 20,
+    marginTop: 20,
+    alignItems: "center",
+  },
+  cancelText: {
+    fontWeight: "bold",
+    fontSize: 20,
+    color: "#06b6d4",
+  },
+});
+
+export const optionGallery = StyleSheet.create({
+  option: {
+    backgroundColor: "#171717",
+  },
+  optionEnd: {
+    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 20,
+  },
+  optionText: {
+    color: "#fff",
+    fontSize: 18,
+  },
+});
+
+export const optionCamera = StyleSheet.create({
+  option: {
+    backgroundColor: "#171717",
+  },
+  optionEnd: {
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
+  },
+  optionText: {
+    color: "#fff",
+    fontSize: 18,
   },
 });

@@ -1,5 +1,5 @@
-const SERVER_IP = "172.16.3.65:3977";
-//const SERVER_IP = "192.168.1.17:3977";
+//const SERVER_IP = "172.16.3.65:3977";
+const SERVER_IP = "192.168.1.17:3977";
 export const ENV = {
   SERVER_IP: SERVER_IP,
   BASE_PATH: `http://${SERVER_IP}`,
@@ -15,6 +15,7 @@ export const ENV = {
     USER: "user",
     CHAT: "chat",
     CHAT_MESSAGES: "chat/message",
+    CHAT_MESSAGES_IMAGE: "chat/message/image",
     CHAT_MESSAGE_LAST: "chat/message/last",
     CHAT_TOTAL: "chat/message/total",
   },

@@ -10,7 +10,7 @@ import { ENV } from "../../utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ListMessages } from "../../components/Chat/ListMessages";
 import { socket, io } from "../../utils";
-import { ChatForm } from "./ChatForm";
+import { ChatForm } from "../../components/Chat";
 
 const chatMessageController = new ChatMessage();
 const unReadMessagesController = new UnreadMessages();
@@ -79,10 +79,10 @@ export const Chat = () => {
       {!messages ? (
         <LoadingScreen />
       ) : (
-        <View>
+        <>
           <ListMessages messages={messages} />
           <ChatForm chatId={params.chatId} />
-        </View>
+        </>
       )}
     </>
   );
